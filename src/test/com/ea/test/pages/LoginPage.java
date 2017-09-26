@@ -2,6 +2,7 @@ package com.ea.test.pages;
 
 import com.ea.framework.base.BasePage;
 import com.ea.framework.controls.elements.HyperLink;
+import com.ea.framework.utilities.WebDriverExtension;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
@@ -10,16 +11,13 @@ import org.testng.Assert;
 public class LoginPage extends BasePage {
 
     @FindBy(how = How.XPATH, using = ".//*[@id='header_logo']/a/img")
-    private WebElement ImgLogo;
+    private WebElement HomePageLogo;
 
-    @FindBy(how = How.CSS, using = ".//*[@class='login']")
-    private WebElement SignInTxt;
+    @FindBy(how = How.XPATH, using = ".//*[@title='Log in to your customer account']")
+    private WebElement SignInLink;
 
-    @FindBy(how = How.XPATH, using = ".//*[@id='header']/div[2]/div/div/nav/div[1]/a")
-    private HyperLink SignInLink;
-
-    @FindBy(how = How.XPATH,using = ".//*[@id='columns']/div[1]/span[2]")
-    private WebElement TxtAuthentication;
+    @FindBy(how = How.XPATH,using = ".//*[@id='center_column']/h1[@class='page-heading']")
+    private WebElement TxtPresentInLoginPage;
 
     @FindBy(how = How.XPATH,using = ".//*[@id='email']")
     private WebElement Username;
@@ -28,44 +26,56 @@ public class LoginPage extends BasePage {
     private WebElement Password;
 
     @FindBy(how = How.XPATH,using = ".//*[@id='SubmitLogin']")
-    private WebElement SubmitSIgn;
+    private WebElement ClickSignInBtn;
 
-    @FindBy(how = How.XPATH ,using = ".//*[@id='header']/div[2]/div/div/nav/div[1]/a")
-    private WebElement TxtUsername;
+    @FindBy(how = How.XPATH,using = ".//*[@title='View my customer account']/span")
+    private WebElement HomePageUserName;
 
-    public void ImageLogoHomepage()
-    {
-        ImgLogo.isDisplayed();
-    }
-    public String GetSigninText()
-    {
-        return SignInTxt.getText();
+    @FindBy(how = How.XPATH,using = "//*[@title='Log me out']")
+    private WebElement Signout;
+
+    public boolean IsLogoDisplayed() {
+        return HomePageLogo.isDisplayed();
     }
 
-    public void GoLogin()
+    public boolean IsSignInDispalyed()
+
+    {
+        return SignInLink.isDisplayed();
+    }
+
+    public void ClickSignInLink()
     {
         SignInLink.click();
     }
 
-    public void GetAuthText()
+    public boolean IsAUthTxtPresent()
     {
-        TxtAuthentication.isDisplayed();
+        return TxtPresentInLoginPage.isDisplayed();
     }
 
-    public void LoginDetails(String username,String passwd)
+    public void ValidLogin(String username,String pass)
     {
+        WebDriverExtension.scrollingByCoordinatesofAPage(0,180);
         Username.clear();
         Username.sendKeys(username);
         Password.clear();
-        Password.sendKeys(passwd);
-
+        Password.sendKeys(pass);
     }
 
-    public void ClickLoginButton(){
-        SubmitSIgn.click();
-    }
-    public String GetLoggenUsername()
+    public void ClickLoginBtn()
     {
-       return TxtUsername.getText();
+        ClickSignInBtn.click();
+
+    }
+
+    public boolean IsUserNameDisplayed()
+    {
+       return HomePageUserName.isDisplayed();
+    }
+
+    public void SignOut()
+    {
+        Signout.click();
     }
 }

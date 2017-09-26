@@ -1,59 +1,90 @@
 package com.ea.test.steps;
 
+import com.cucumber.listener.Reporter;
 import com.ea.framework.base.Base;
 import com.ea.framework.base.DriverContext;
-import com.ea.framework.config.Settings;
+import com.ea.framework.utilities.WebElementExtension;
 import com.ea.test.pages.LoginPage;
 import cucumber.api.DataTable;
-import cucumber.api.PendingException;
 import cucumber.api.java.en.And;
-import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import org.junit.Assert;
+import org.openqa.selenium.By;
 
 import java.util.List;
 
-import static com.ea.framework.base.FrameworkInitialize.InitializeBrowser;
-
-public class LoginSteps extends Base{
-    @Given("^I open Website$")
+public class LoginSteps extends Base {
+    @When("^I Open Website$")
     public void iOpenWebsite() throws Throwable {
-
-     CurrentPage= GetInstance(LoginPage.class);
+        CurrentPage = GetInstance(LoginPage.class);
     }
 
-    @Then("^I see Lo go on HomePage$")
-    public void iSeeLoGoOnHomePage() throws Throwable {
-        CurrentPage.As(LoginPage.class).ImageLogoHomepage();
+    @Then("^I  Check PageTitle as My Store$")
+    public void iCheckPageTitleAsMyStore() throws Throwable {
+        try {
+            Assert.assertEquals("Wrong Page title", "My Store", DriverContext.Driver.getTitle());
+        } catch (Exception e) {
+            Reporter.addStepLog("Wrong Title");
+        }
     }
 
+    @And("^I See HomePage Logo$")
+    public void iSeeHomePageLogo() throws Throwable {
 
-
-    @And("^I click on SignIn Link for Login$")
-    public void iClickOnSignInLinkForLogin() throws Throwable {
-        CurrentPage.As(LoginPage.class).GoLogin();
-        Thread.sleep(3000);
+        CurrentPage.As(LoginPage.class).IsLogoDisplayed();
     }
 
-    @Then("^I See Authentication Text On Login page$")
-    public void iSeeAuthenticationTextOnLoginPage() throws Throwable {
-        CurrentPage.As(LoginPage.class).GetAuthText();
+    @And("^I See SignIn Link$")
+    public void iSeeSignInLink() throws Throwable {
+
+        CurrentPage.As(LoginPage.class).IsSignInDispalyed();
     }
 
-    @And("^I Enter Username and password$")
-    public void iEnterUsernameAndPassword(DataTable data) throws Throwable {
+    @Then("^I click on SignIn Link for LoginPage$")
+    public void iClickOnSignInLinkForLoginPage() throws Throwable {
+       CurrentPage.As(LoginPage.class).ClickSignInLink();
+    }
+
+    @And("^I Check LoginPage Title$")
+    public void iCheckLoginPageTitle() throws Throwable {
+
+        try {
+            WebElementExtension.GetWhenVisible(By.xpath(".//*[@id='center_column']/h1[@class='page-heading']"),20);
+            Assert.assertEquals("Wrong Page title", "Login - My Store", DriverContext.Driver.getTitle());
+        } catch (Exception e) {
+            Reporter.addStepLog("Wrong Title");
+        }
+    }
+
+    @And("^I Check Authentication Text is Display$")
+    public void iCheckAuthenticationTextIsDisplay() throws Throwable {
+        
+        CurrentPage.As(LoginPage.class).IsAUthTxtPresent();
+    }
+
+    @Then("^I Enter Correct UserName and Password$")
+    public void iEnterCorrectUserNameAndPassword(DataTable data) throws Throwable {
+
         List<List<String>> table = data.raw();
-        CurrentPage.As(LoginPage.class).LoginDetails(table.get(1).get(0), table.get(1).get(1));
+       CurrentPage.As(LoginPage.class).ValidLogin(table.get(1).get(0),table.get(1).get(1));
     }
 
-    @Then("^I click SignIn Button$")
+    @And("^I click SignIn Button$")
     public void iClickSignInButton() throws Throwable {
-        CurrentPage.As(LoginPage.class).ClickLoginButton();
+        CurrentPage.As(LoginPage.class).ClickLoginBtn();
     }
 
-    @And("^I see UserName on HomePage$")
+    @Then("^I see UserName on HomePage$")
     public void iSeeUserNameOnHomePage() throws Throwable {
-        Assert.assertEquals("Invalid Username","Sign in",CurrentPage.As(LoginPage.class).GetLoggenUsername());
+
+        WebElementExtension.GetWhenVisible(By.xpath(".//*[@title='View my customer account']/span"),20);
+        CurrentPage.As(LoginPage.class).IsUserNameDisplayed();
+    }
+
+    @When("^I Click on SignOut Link$")
+    public void iClickOnSignOutLink() throws Throwable {
+        WebElementExtension.GetWhenVisible(By.xpath("//*[@title='Log me out']"),20);
+      CurrentPage.As(LoginPage.class).SignOut();
     }
 }
