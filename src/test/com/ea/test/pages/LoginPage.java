@@ -1,8 +1,11 @@
 package com.ea.test.pages;
 
 import com.ea.framework.base.BasePage;
+import com.ea.framework.base.DriverContext;
 import com.ea.framework.controls.elements.HyperLink;
 import com.ea.framework.utilities.WebDriverExtension;
+import com.ea.framework.utilities.WebElementExtension;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
@@ -33,6 +36,13 @@ public class LoginPage extends BasePage {
 
     @FindBy(how = How.XPATH,using = "//*[@title='Log me out']")
     private WebElement Signout;
+
+    public void GetLoginPageTitle()
+    {
+        WebElementExtension.GetWhenVisible(By.xpath(".//*[@id='center_column']/h1[@class='page-heading']"),20);
+        DriverContext.Driver.getTitle();
+        org.junit.Assert.assertEquals("Wrong Page title", "Login - My Store", DriverContext.Driver.getTitle());
+    }
 
     public boolean IsLogoDisplayed() {
         return HomePageLogo.isDisplayed();
@@ -71,11 +81,13 @@ public class LoginPage extends BasePage {
 
     public boolean IsUserNameDisplayed()
     {
-       return HomePageUserName.isDisplayed();
+        WebElementExtension.GetWhenVisible(By.xpath(".//*[@title='View my customer account']/span"),20);
+        return HomePageUserName.isDisplayed();
     }
 
     public void SignOut()
     {
+        WebElementExtension.GetWhenVisible(By.xpath("//*[@title='Log me out']"),20);
         Signout.click();
     }
 }

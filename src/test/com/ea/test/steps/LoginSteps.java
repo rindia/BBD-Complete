@@ -49,12 +49,7 @@ public class LoginSteps extends Base {
     @And("^I Check LoginPage Title$")
     public void iCheckLoginPageTitle() throws Throwable {
 
-        try {
-            WebElementExtension.GetWhenVisible(By.xpath(".//*[@id='center_column']/h1[@class='page-heading']"),20);
-            Assert.assertEquals("Wrong Page title", "Login - My Store", DriverContext.Driver.getTitle());
-        } catch (Exception e) {
-            Reporter.addStepLog("Wrong Title");
-        }
+        CurrentPage.As(LoginPage.class).GetLoginPageTitle();
     }
 
     @And("^I Check Authentication Text is Display$")
@@ -78,13 +73,11 @@ public class LoginSteps extends Base {
     @Then("^I see UserName on HomePage$")
     public void iSeeUserNameOnHomePage() throws Throwable {
 
-        WebElementExtension.GetWhenVisible(By.xpath(".//*[@title='View my customer account']/span"),20);
         CurrentPage.As(LoginPage.class).IsUserNameDisplayed();
     }
 
     @When("^I Click on SignOut Link$")
     public void iClickOnSignOutLink() throws Throwable {
-        WebElementExtension.GetWhenVisible(By.xpath("//*[@title='Log me out']"),20);
       CurrentPage.As(LoginPage.class).SignOut();
     }
 }
