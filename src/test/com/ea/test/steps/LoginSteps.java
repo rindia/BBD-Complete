@@ -6,6 +6,7 @@ import com.ea.framework.base.DriverContext;
 import com.ea.framework.utilities.WebElementExtension;
 import com.ea.test.pages.LoginPage;
 import cucumber.api.DataTable;
+import cucumber.api.PendingException;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
@@ -79,5 +80,38 @@ public class LoginSteps extends Base {
     @When("^I Click on SignOut Link$")
     public void iClickOnSignOutLink() throws Throwable {
       CurrentPage.As(LoginPage.class).SignOut();
+    }
+
+    @Then("^I Enter Blank UserName and Password$")
+    public void iEnterBlankUserNameAndPassword(DataTable table) throws Throwable {
+
+        List<List<String>> data = table.raw();
+        CurrentPage.As(LoginPage.class).ValidLogin(data.get(1).get(0),data.get(1).get(1));
+
+    }
+
+    @And("^I See An Email Address is Required Validation Error$")
+    public void iSeeAnEmailAddressIsRequiredValidationError() throws Throwable {
+
+        CurrentPage.As(LoginPage.class).ValidationErrorBlankFields();
+    }
+
+    @Then("^I Enter Right Username and Wrong Password$")
+    public void iEnterRightUsernameAndWrongPassword(DataTable table) throws Throwable {
+
+        List<List<String>> data = table.raw();
+        CurrentPage.As(LoginPage.class).ValidLogin(data.get(1).get(0),data.get(1).get(1));
+    }
+
+    @And("^I See Authentication failed Error Mesage$")
+    public void iSeeAuthenticationFailedErrorMesage() throws Throwable {
+       CurrentPage.As(LoginPage.class).ValidationErr();
+       Thread.sleep(2000);
+    }
+
+    @Then("^I Enter Wrong Username and Right Password$")
+    public void iEnterWrongUsernameAndRightPassword(DataTable table) throws Throwable {
+        List<List<String>> data = table.raw();
+        CurrentPage.As(LoginPage.class).ValidLogin(data.get(1).get(0),data.get(1).get(1));
     }
 }
